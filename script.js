@@ -12,7 +12,7 @@ const max = document.getElementById('max');
 max.innerHTML = points;
 
 const ut = new Image();
-ut.src = 'kepek/Névtelen.png';
+ut.src = 'img/2000sablon.png';
 
 class Kocsik {
     constructor(x, y) {
@@ -24,21 +24,21 @@ class Kocsik {
 const kocsik = [];
 
 let x = 0;
-let x2 = -900;
+let x2 = -2000;
 let count = 0;
 
 function animate() {
     ctx.clearRect(0, 0, canvasw, canvash);
     ctx.drawImage(ut, 0, x);
     ctx.drawImage(ut, 0, x2);
-    if ( x > 900 ) {
-        x = x2 - 900 + speed;
+    if ( x > 1500 ) {
+        x = x2 - 2000 + speed;
     }
     else {
         x += speed;
     }
-    if ( x2 > 900 ) {
-        x2 = x - 900 + speed;
+    if ( x2 > 1500 ) {
+        x2 = x - 2000 + speed;
     }
     else {
         x2 += speed;
