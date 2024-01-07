@@ -14,6 +14,16 @@ max.innerHTML = points;
 const ut = new Image();
 ut.src = 'img/2000sablon.png';
 
+const car = {
+    src: 'img/player.png',
+    x: 375,
+    y: 600,
+    width: 140,
+    height: 250,
+    velocityX: 0,
+};
+
+
 class Kocsik {
     constructor(x, y) {
         this.x = x;
@@ -29,8 +39,65 @@ let count = 0;
 
 function animate() {
     ctx.clearRect(0, 0, canvasw, canvash);
+    moveBackground()
+    drawCar();
+    moveCar();
+    drawEnemies();
+    moveEnemies();
+    //checkCollisions();
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+        car.velocityX = -speed;
+    } else if (e.key === 'ArrowRight') {
+        car.velocityX = speed;
+    }
+});
+
+window.addEventListener('keyup', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        car.velocityX = 0;
+    }
+});
+
+
+function moveEnemies() {
+    for (let i = 0; i < kocsik.length; i++) {
+        kocsik[i].y += 5;
+
+        if (kocsik[i].y > canvas.height) {
+            kocsik.splice(i, 1);
+            i--;
+        }
+    }
+
+    if (Math.random() < 0.005) {
+        const enemy = {
+            x: Math.random() * (canvas.width - 50),
+            y: -50,
+            width: 140,
+            height: 250,
+            color: 'blue'
+        };
+        kocsik.push(enemy);
+    }
+}
+
+function drawEnemies() {
+    for (const enemy of kocsik) {
+        ctx.fillStyle = enemy.color;
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+    }
+}
+
+function moveBackground() {
     ctx.drawImage(ut, 0, x);
     ctx.drawImage(ut, 0, x2);
+    
     if ( x > 1500 ) {
         x = x2 - 2000 + speed;
     }
@@ -43,9 +110,9 @@ function animate() {
     else {
         x2 += speed;
     }
-
-    speed += 0.02;
-
+    
+    speed += 0.0002;
+    
     if (count >= 60) {
         count = 0;
         points += 1;
@@ -54,9 +121,36 @@ function animate() {
     else {
         count += 1;
     }
-    requestAnimationFrame(animate);
 }
-animate();
+
+function drawCar() {
+    ctx.fillStyle = car;
+    ctx.fillRect(375, 600, 140, 250);
+}
+
+function moveCar() {
+    car.x += car.velocityX;
+
+    if (car.x < 80) {
+        car.x = 80;
+    } else if (car.x > (canvas.width - 80) - car.width) {
+        car.x = (canvas.width - 80) - car.width;
+    }
+}
+
+function checkCollisions() {
+    for (const enemy of enemies) {
+        if (
+            car.x < enemy.x + enemy.width &&
+            car.x + car.width > enemy.x &&
+            car.y < enemy.y + enemy.height &&
+            car.y + car.height > enemy.y
+        ) {
+            alert('Vesztettél te szar');
+            resetGame();
+        }
+    }
+}
 
 // if (points > maxPoints) {
 //     maxPoints = points;
