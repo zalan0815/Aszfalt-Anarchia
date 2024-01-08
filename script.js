@@ -1,21 +1,31 @@
+alert("pipáld be majd ki a checkboxot és elindul!");
+alert("ha bepipálod megállítja")
+
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const canvasw = canvas.width = 900;
 const canvash = canvas.height = 900;
 
+let requestId;
+
 let speed = 10;
+let egerut = 1;
 let points = 0;
 let maxPoints = 0;
+let deathList = [];
+
 const score = document.getElementById('score');
 score.innerHTML = points;
 const max = document.getElementById('max');
 max.innerHTML = points;
 
+const checkbox = document.getElementById("myCheckbox");
+
 const ut = new Image();
 ut.src = 'img/2000sablon.png';
 
-const auto1 = new Image();
-auto1.src = 'img/Névtelen2.png';
+const autok = ['kek', 'lila', 'narancs', 'piros', 'sarga', 'zold']
 // const car = {
 //     src: 'img/player.png',
 //     x: 375,
@@ -27,8 +37,9 @@ auto1.src = 'img/Névtelen2.png';
 
 
 class Kocsik {
-    constructor(auto, x, y) {
-        this.auto = auto;
+    constructor(img, x, y) {
+        this.szin = new Image();
+        this.szin.src = img;
         this.x = x;
         this.y = y;
     }
@@ -36,7 +47,7 @@ class Kocsik {
 
 const kocsik = [];
 
-const c = [90, 270, 470, 660];
+const savok = [90, 270, 470, 660];
 
 let x1 = 0;
 let x2 = -2000;
@@ -62,10 +73,16 @@ function animate() {
         score.innerHTML = points;
     }
 
-    requestAnimationFrame(animate);
+    requestId = requestAnimationFrame(animate);
 }
-
-animate();
+checkbox.addEventListener('change', function() {
+    if (checkbox.checked) {
+        cancelAnimationFrame(requestId);
+    }
+    else {
+        requestId = requestAnimationFrame(animate);
+    }
+});
 
 // window.addEventListener('keydown', (e) => {
 //     if (e.key === 'ArrowLeft') {
@@ -84,11 +101,22 @@ animate();
 
 function moveEnemies() {
     if (kocsik.length > 0) {
-        kocsik.forEach(kocsi => {
-            ctx.drawImage(kocsi.auto, kocsi.x, kocsi.y);
+        kocsik.forEach((kocsi, index) => {
+            ctx.drawImage(kocsi.szin, kocsi.x, kocsi.y);
             kocsi.y += speed / 3;
+
+            if (kocsi.y > 900) {
+                deathList.push(index);  
+            }
         });
+        
+        for (let i = deathList.length - 1; i >= 0; i--) {
+            kocsik.splice(deathList[i], 1);
+        }
+
+        deathList = [];
     }
+
 //     for (let i = 0; i < kocsik.length; i++) {
 //         kocsik[i].y += 5;
 
@@ -111,8 +139,17 @@ function moveEnemies() {
 // }
 
 function drawEnemies() {
-    if (count % 60 * speed == 0) {
-        kocsik.push(new Kocsik(auto1, c[Math.floor(Math.random() * 4)], -1000));
+    if (count % 120 * speed == 0) {
+
+        egerut += Math.floor(Math.random() * 3) - 1;
+        if (egerut < 0) egerut = 0;
+        if (egerut > 3) egerut = 3;
+
+        for (let sav = 0; sav < savok.length; sav++) {
+            if (sav != egerut){
+                if (Math.floor(Math.random() * 2) == 1) kocsik.push(new Kocsik('img/' + autok[Math.floor(Math.random() * autok.length)] + '.png', savok[sav], -1000));
+            }
+        }
     }
 //     for (const enemy of kocsik) {
 //         ctx.fillStyle = enemy.color;
