@@ -67,6 +67,7 @@ function animate() {
     moveEnemies();
     //checkCollisions();
     requestAnimationFrame(animate);
+    }
 }
 
 animate();
@@ -188,4 +189,4 @@ function checkCollisions() {
 // if (points > maxPoints) {
 //     maxPoints = points;
 //     max.innerHTML = points;
-// }
+//}
