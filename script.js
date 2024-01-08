@@ -47,27 +47,20 @@ function animate() {
     ctx.drawImage(ut, 0, x1);
     ctx.drawImage(ut, 0, x2);
 
-    if (kocsik.length > 0) {
-        kocsik.forEach(kocsi => {
-            ctx.drawImage(kocsi.auto, kocsi.x, kocsi.y);
-            kocsi.y += speed / 3;
-        });
-    }
-    
-    if (count % 60 == 1) {
-        points += 1;
-        score.innerHTML = points;
-
-        kocsik.push(new Kocsik(auto1, c[Math.floor(Math.random() * 4)], -1000));
-    }
     moveBackground()
+    drawEnemies();
+    moveEnemies();
     // drawCar();
     // moveCar();
-    // drawEnemies();
-    // moveEnemies();
     //checkCollisions();
 
-    speed += 0.02;
+    if (speed < 15) speed += 0.01;
+    count += 1;
+
+    if (count % 60 == 0) {
+        points += 1;
+        score.innerHTML = points;
+    }
 
     requestAnimationFrame(animate);
 }
@@ -89,7 +82,13 @@ animate();
 // });
 
 
-// function moveEnemies() {
+function moveEnemies() {
+    if (kocsik.length > 0) {
+        kocsik.forEach(kocsi => {
+            ctx.drawImage(kocsi.auto, kocsi.x, kocsi.y);
+            kocsi.y += speed / 3;
+        });
+    }
 //     for (let i = 0; i < kocsik.length; i++) {
 //         kocsik[i].y += 5;
 
@@ -97,7 +96,7 @@ animate();
 //             kocsik.splice(i, 1);
 //             i--;
 //         }
-//     }
+}
 
 //     if (Math.random() < 0.005) {
 //         const enemy = {
@@ -111,12 +110,15 @@ animate();
 //     }
 // }
 
-// function drawEnemies() {
+function drawEnemies() {
+    if (count % 60 * speed == 0) {
+        kocsik.push(new Kocsik(auto1, c[Math.floor(Math.random() * 4)], -1000));
+    }
 //     for (const enemy of kocsik) {
 //         ctx.fillStyle = enemy.color;
 //         ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
 //     }
-// }
+}
 
 function moveBackground() {
     ctx.drawImage(ut, 0, x1);
