@@ -25,6 +25,12 @@ const checkbox = document.getElementById("myCheckbox");
 const ut = new Image();
 ut.src = 'img/2000sablon.png';
 
+const player = new Image();
+player.src = 'img/player.png';
+let playerPos = 450;
+let playerMoving = 0;
+let playerSpeed = 1;
+
 const autok = ['kek', 'lila', 'narancs', 'piros', 'sarga', 'zold']
 // const car = {
 //     src: 'img/player.png',
@@ -45,7 +51,7 @@ class Kocsik {
     }
 }
 
-const kocsik = [];
+let kocsik = [];
 
 const savok = [90, 270, 470, 660];
 
@@ -61,9 +67,9 @@ function animate() {
     moveBackground()
     drawEnemies();
     moveEnemies();
+    playerMovement();
     // drawCar();
-    // moveCar();
-    //checkCollisions();
+    checkCollisions();
 
     if (speed < 15) speed += 0.01;
     count += 1;
@@ -84,20 +90,38 @@ checkbox.addEventListener('change', function() {
     }
 });
 
-// window.addEventListener('keydown', (e) => {
-//     if (e.key === 'ArrowLeft') {
-//         car.velocityX = -speed;
-//     } else if (e.key === 'ArrowRight') {
-//         car.velocityX = speed;
-//     }
-// });
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+        playerMoving = -1;
+    } else if (e.key === 'ArrowRight') {
+        playerMoving = 1;
+    }
+});
 
-// window.addEventListener('keyup', (e) => {
-//     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-//         car.velocityX = 0;
-//     }
-// });
+window.addEventListener('keyup', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        playerMoving = 0;
+    }
+});
 
+function drawEnemies() {
+    if (count % 180 * speed == 0) {
+
+        egerut += Math.floor(Math.random() * 3) - 1;
+        if (egerut < 0) egerut = 0;
+        if (egerut > 3) egerut = 3;
+
+        for (let sav = 0; sav < savok.length; sav++) {
+            if (sav != egerut){
+                if (Math.floor(Math.random() * 2) == 1) kocsik.push(new Kocsik('img/' + autok[Math.floor(Math.random() * autok.length)] + '.png', savok[sav], -1000));
+            }
+        }
+    }
+//     for (const enemy of kocsik) {
+//         ctx.fillStyle = enemy.color;
+//         ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+//     }
+}
 
 function moveEnemies() {
     if (kocsik.length > 0) {
@@ -138,24 +162,6 @@ function moveEnemies() {
 //     }
 // }
 
-function drawEnemies() {
-    if (count % 120 * speed == 0) {
-
-        egerut += Math.floor(Math.random() * 3) - 1;
-        if (egerut < 0) egerut = 0;
-        if (egerut > 3) egerut = 3;
-
-        for (let sav = 0; sav < savok.length; sav++) {
-            if (sav != egerut){
-                if (Math.floor(Math.random() * 2) == 1) kocsik.push(new Kocsik('img/' + autok[Math.floor(Math.random() * autok.length)] + '.png', savok[sav], -1000));
-            }
-        }
-    }
-//     for (const enemy of kocsik) {
-//         ctx.fillStyle = enemy.color;
-//         ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-//     }
-}
 
 function moveBackground() {
     ctx.drawImage(ut, 0, x1);
@@ -207,11 +213,16 @@ function moveBackground() {
 // }
 
 // function drawCar() {
-//     ctx.fillStyle = car;
-//     ctx.fillRect(375, 600, 140, 250);
+//      ctx.fillStyle = car;
+//      ctx.fillRect(375, 600, 140, 250);
 // }
 
-// function moveCar() {
+function playerMovement() {
+    ctx.drawImage(player, playerPos, 600)
+
+    playerPos += (playerSpeed + speed) * playerMoving;
+    if (playerPos < 80) playerPos = 80;
+    if (playerPos > 680) playerPos = 680; 
 //     car.x += car.velocityX;
 
 //     if (car.x < 80) {
@@ -219,9 +230,15 @@ function moveBackground() {
 //     } else if (car.x > (canvas.width - 80) - car.width) {
 //         car.x = (canvas.width - 80) - car.width;
 //     }
-// }
+}
 
-// function checkCollisions() {
+function checkCollisions() {
+    kocsik.forEach(kocsi => {
+        if ((kocsi.y + 250) >= 600)
+        {
+            if (playerPos + 140 > kocsi.x && playerPos < kocsi.x + 140) lose();
+        }
+    });
 //     for (const enemy of enemies) {
 //         if (
 //             car.x < enemy.x + enemy.width &&
@@ -233,8 +250,19 @@ function moveBackground() {
 //             resetGame();
 //         }
 //     }
-// }
+}
 
+function lose() {
+    cancelAnimationFrame(requestId);
+    alert("balfasz");
+    console.log(1);
+    playerPos = 450;
+    console.log(2);
+    kocsik = [];
+    console.log(3);
+    requestId = requestAnimationFrame(animate);
+    console.log(4);
+}
 // if (points > maxPoints) {
 //     maxPoints = points;
 //     max.innerHTML = points;
