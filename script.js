@@ -1,13 +1,10 @@
-alert("pipáld be majd ki a checkboxot és elindul!");
-alert("ha bepipálod megállítja")
-
-
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const canvasw = canvas.width = 900;
 const canvash = canvas.height = 900;
 
 let requestId;
+let game;
 
 let speed = 10;
 let egerut = 1;
@@ -15,12 +12,7 @@ let points = 0;
 let maxPoints = 0;
 let deathList = [];
 
-const score = document.getElementById('score');
-score.innerHTML = points;
-const max = document.getElementById('max');
-max.innerHTML = points;
-
-const checkbox = document.getElementById("myCheckbox");
+const startButton = document.getElementById("start");
 
 const ut = new Image();
 ut.src = 'img/2000sablon.png';
@@ -59,36 +51,53 @@ let x1 = 0;
 let x2 = -2000;
 let count = 0;
 
-function animate() {
-    ctx.clearRect(0, 0, canvasw, canvash);
-    ctx.drawImage(ut, 0, x1);
-    ctx.drawImage(ut, 0, x2);
-
-    moveBackground()
-    drawEnemies();
-    moveEnemies();
-    playerMovement();
-    // drawCar();
-    checkCollisions();
-
-    if (speed < 15) speed += 0.01;
-    count += 1;
-
-    if (count % 60 == 0) {
-        points += 1;
-        score.innerHTML = points;
-    }
-
+function start() {
+    game = true;
+    playerPos = 450;
+    playerMoving = 0;
+    speed = 10;
+    egerut = 1;
+    points = 0;
+    deathList = [];
+    kocsik = [];
+    x1 = 0;
+    x2 = -2000;
+    count = 0;
     requestId = requestAnimationFrame(animate);
+    startButton.style.display = 'none';
 }
-checkbox.addEventListener('change', function() {
-    if (checkbox.checked) {
-        cancelAnimationFrame(requestId);
-    }
-    else {
+
+function lose() {
+    game = false;
+    if (points > maxPoints) maxPoints = points;
+    cancelAnimationFrame(requestId);
+    ctx.clearRect(0, 0, canvasw, canvash);
+    startButton.style.display = 'block';
+}
+
+function animate() {
+    if (game)
+    {
+        ctx.clearRect(0, 0, canvasw, canvash);
+
+        moveBackground();
+        drawEnemies();
+        moveEnemies();
+        playerMovement();
+        // drawCar();
+        checkCollisions();
+        pointPrint();
+    
+        if (speed < 50) speed += 0.05;
+        count += 1;
+    
+        if (count % 60 == 0) {
+            points += 1;
+        }
+        
         requestId = requestAnimationFrame(animate);
     }
-});
+}
 
 window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
@@ -234,7 +243,7 @@ function playerMovement() {
 
 function checkCollisions() {
     kocsik.forEach(kocsi => {
-        if ((kocsi.y + 250) >= 600)
+        if ((kocsi.y + 250) >= 600 && kocsi.y < 800)
         {
             if (playerPos + 140 > kocsi.x && playerPos < kocsi.x + 140) lose();
         }
@@ -252,16 +261,11 @@ function checkCollisions() {
 //     }
 }
 
-function lose() {
-    cancelAnimationFrame(requestId);
-    alert("balfasz");
-    console.log(1);
-    playerPos = 450;
-    console.log(2);
-    kocsik = [];
-    console.log(3);
-    requestId = requestAnimationFrame(animate);
-    console.log(4);
+function pointPrint() {
+    ctx.font = "50px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText(points, 10, 50);
+    ctx.fillText(maxPoints, 10, 100)
 }
 // if (points > maxPoints) {
 //     maxPoints = points;

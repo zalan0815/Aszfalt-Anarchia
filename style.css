@@ -6,3 +6,14 @@
 #canvas {
     border: 1px solid black;
 }
+
+#start {
+    position: absolute;
+    top: 33%;
+    display: block;
+    background-color: greenyellow;
+    border-radius: 50%;
+    font-size: 100px;
+    color: white;
+    padding: 5%;
+}
