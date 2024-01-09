@@ -6,10 +6,3 @@
 #canvas {
     border: 1px solid black;
 }
-
-#start {
-    width: 587px;
-    height: 186px;
-    position: absolute;
-    top: 44.5%;
-}

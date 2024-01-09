@@ -19,8 +19,6 @@ let points = 0;
 let maxPoints = 0;
 let deathList = [];
 
-const startButton = document.getElementById("start");
-
 const ut = new Image();
 ut.src = 'img/2000sablon.png';
 
@@ -72,7 +70,6 @@ function start() {
         x1 = 0;
         x2 = -2000;
         count = 0;
-        startButton.style.display = 'none';
         requestId = requestAnimationFrame(animate);
     }
 }
