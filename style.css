@@ -8,12 +8,8 @@
 }
 
 #start {
+    width: 587px;
+    height: 186px;
     position: absolute;
-    top: 33%;
-    display: block;
-    background-color: greenyellow;
-    border-radius: 50%;
-    font-size: 100px;
-    color: white;
-    padding: 5%;
+    top: 44.5%;
 }

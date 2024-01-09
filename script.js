@@ -3,8 +3,15 @@ const ctx = canvas.getContext('2d');
 const canvasw = canvas.width = 900;
 const canvash = canvas.height = 900;
 
+const startScreen = new Image();
+startScreen.src = 'img/startscreen.png';
+const endScreen = new Image();
+endScreen.src = 'img/endscreen.png';
+
 let requestId;
+requestId = requestAnimationFrame(animate);
 let game;
+let screen = 1;
 
 let speed = 10;
 let egerut = 1;
@@ -52,30 +59,42 @@ let x2 = -2000;
 let count = 0;
 
 function start() {
-    game = true;
-    playerPos = 450;
-    playerMoving = 0;
-    speed = 10;
-    egerut = 1;
-    points = 0;
-    deathList = [];
-    kocsik = [];
-    x1 = 0;
-    x2 = -2000;
-    count = 0;
-    requestId = requestAnimationFrame(animate);
-    startButton.style.display = 'none';
+    if (!game) 
+    {
+        game = true;
+        playerPos = 450;
+        playerMoving = 0;
+        speed = 10;
+        egerut = 1;
+        points = 0;
+        deathList = [];
+        kocsik = [];
+        x1 = 0;
+        x2 = -2000;
+        count = 0;
+        startButton.style.display = 'none';
+        requestId = requestAnimationFrame(animate);
+    }
 }
 
 function lose() {
     game = false;
     if (points > maxPoints) maxPoints = points;
     cancelAnimationFrame(requestId);
-    ctx.clearRect(0, 0, canvasw, canvash);
-    startButton.style.display = 'block';
+    screen = 2;
 }
 
 function animate() {
+    if(screen == 1)
+    {
+        ctx.clearRect(0, 0, canvasw, canvash);
+        ctx.drawImage(startScreen, 0, 0);
+    }
+    if(screen == 2)
+    {
+        ctx.drawImage(endScreen, 0, 0)
+    }
+
     if (game)
     {
         ctx.clearRect(0, 0, canvasw, canvash);
@@ -94,7 +113,7 @@ function animate() {
         if (count % 60 == 0) {
             points += 1;
         }
-        
+
         requestId = requestAnimationFrame(animate);
     }
 }
