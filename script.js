@@ -229,7 +229,7 @@ function moveBackground() {
 function playerMovement() {
     ctx.drawImage(player, playerPos, 600)
 
-    playerPos += (playerSpeed + speed) * playerMoving;
+    playerPos += (playerSpeed + speed / 5) * playerMoving;
     if (playerPos < 80) playerPos = 80;
     if (playerPos > 680) playerPos = 680; 
 //     car.x += car.velocityX;
