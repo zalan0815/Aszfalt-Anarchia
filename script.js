@@ -37,8 +37,7 @@ const autok = ['kek', 'lila', 'narancs', 'piros', 'sarga', 'zold']
 //     height: 250,
 //     velocityX: 0,
 // };
-
-
+//itt jártam
 class Kocsik {
     constructor(img, x, y) {
         this.szin = new Image();
@@ -104,7 +103,7 @@ function animate() {
         checkCollisions();
         pointPrint();
     
-        if (speed < 50) speed += 0.05;
+        if (speed < 50) speed += 0.02;
         count += 1;
     
         if (count % 60 == 0) {
@@ -152,7 +151,7 @@ function moveEnemies() {
     if (kocsik.length > 0) {
         kocsik.forEach((kocsi, index) => {
             ctx.drawImage(kocsi.szin, kocsi.x, kocsi.y);
-            kocsi.y += speed / 3;
+            kocsi.y += speed / 4;
 
             if (kocsi.y > 900) {
                 deathList.push(index);  
@@ -245,7 +244,7 @@ function moveBackground() {
 function playerMovement() {
     ctx.drawImage(player, playerPos, 600)
 
-    playerPos += (playerSpeed + speed / 5) * playerMoving;
+    playerPos += (playerSpeed + speed / 3) * playerMoving;
     if (playerPos < 80) playerPos = 80;
     if (playerPos > 680) playerPos = 680; 
 //     car.x += car.velocityX;
@@ -278,10 +277,14 @@ function checkCollisions() {
 }
 
 function pointPrint() {
-    ctx.font = "50px Arial";
+    ctx.fillStyle = "rgba(255, 0, 83, 0.5)";
+    ctx.roundRect(0, 0, 175, 75, [0, 0, 25, 0])
+    ctx.fill()
+    //ctx.fillRect(0, 0, 175, 75)
+    ctx.font = "25px Arial";
     ctx.fillStyle = "white";
-    ctx.fillText(points, 10, 50);
-    ctx.fillText(maxPoints, 10, 100)
+    ctx.fillText('SCORE: ' + points, 10, 25);
+    ctx.fillText('PB: ' + maxPoints, 10, 50)
 }
 // if (points > maxPoints) {
 //     maxPoints = points;
