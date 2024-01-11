@@ -17,6 +17,7 @@ let game;
 let screen = 1;
 
 let speed = 10;
+let npcSpeed = 3;
 let egerut = 1;
 let points = 0;
 let maxPoints = Number(document.cookie);
@@ -111,8 +112,13 @@ function animate() {
         checkCollisions();
         pointPrint();
     
-        if (points <= 60) speed += 0.02;
-        
+        if (points <= 40) speed += 0.01;
+        else {
+            if (count % 60 == 0) {
+                npcSpeed -= 0.01;
+            }
+        }
+
         count += 1;
         if (count % 60 == 0) {
             points += 1;
@@ -137,7 +143,7 @@ window.addEventListener('keyup', (e) => {
 });
 
 function drawEnemies() {
-    if (count % 120 * speed == 0) {
+    if (count % 150 * speed == 0) {
 
         egerut += Math.floor(Math.random() * 3) - 1;
         if (egerut < 0) egerut = 0;
@@ -159,7 +165,7 @@ function moveEnemies() {
     if (kocsik.length > 0) {
         kocsik.forEach((kocsi, index) => {
             ctx.drawImage(kocsi.szin, kocsi.x, kocsi.y);
-            kocsi.y += speed / 3;
+            kocsi.y += speed / npcSpeed;
 
             if (kocsi.y > 900) {
                 deathList.push(index);  
