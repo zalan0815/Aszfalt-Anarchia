@@ -10,13 +10,16 @@ endScreen.src = 'img/endscreen.png';
 
 let requestId;
 requestId = requestAnimationFrame(animate);
+ctx.clearRect(0, 0, canvasw, canvash);
+ctx.drawImage(startScreen, 0, 0);
+alert("Üdvözlünk a játékban!")
 let game;
 let screen = 1;
 
 let speed = 10;
 let egerut = 1;
 let points = 0;
-let maxPoints = 0;
+let maxPoints = Number(document.cookie);
 let deathList = [];
 
 const ut = new Image();
@@ -56,6 +59,7 @@ let x2 = -2000;
 let count = 0;
 
 function start() {
+    if (screen == 2) location.reload();
     if (!game) 
     {
         game = true;
@@ -78,6 +82,7 @@ function lose() {
     if (points > maxPoints) maxPoints = points;
     cancelAnimationFrame(requestId);
     screen = 2;
+    document.cookie = maxPoints;
 }
 
 function animate() {
@@ -86,9 +91,12 @@ function animate() {
         ctx.clearRect(0, 0, canvasw, canvash);
         ctx.drawImage(startScreen, 0, 0);
     }
-    if(screen == 2)
+    else if(screen == 2)
     {
-        ctx.drawImage(endScreen, 0, 0)
+        ctx.drawImage(endScreen, 0, 0);
+
+        ctx.fillText(points, 370, 548);
+        ctx.fillText(maxPoints, 370, 588);
     }
 
     if (game)
@@ -103,9 +111,9 @@ function animate() {
         checkCollisions();
         pointPrint();
     
-        if (speed < 50) speed += 0.02;
+        if (points <= 60) speed += 0.02;
+        
         count += 1;
-    
         if (count % 60 == 0) {
             points += 1;
         }
@@ -129,7 +137,7 @@ window.addEventListener('keyup', (e) => {
 });
 
 function drawEnemies() {
-    if (count % 180 * speed == 0) {
+    if (count % 120 * speed == 0) {
 
         egerut += Math.floor(Math.random() * 3) - 1;
         if (egerut < 0) egerut = 0;
@@ -151,7 +159,7 @@ function moveEnemies() {
     if (kocsik.length > 0) {
         kocsik.forEach((kocsi, index) => {
             ctx.drawImage(kocsi.szin, kocsi.x, kocsi.y);
-            kocsi.y += speed / 4;
+            kocsi.y += speed / 3;
 
             if (kocsi.y > 900) {
                 deathList.push(index);  
